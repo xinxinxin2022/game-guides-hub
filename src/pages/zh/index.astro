@@ -9,9 +9,9 @@ const games = [
     color: '#c41e3a',
     description: '通过全面的Boss攻略、Build推荐和探索技巧,掌握交界地的秘密。',
     guides: [
-      { title: '玛莲妮亚,米凯拉之刃 - 终极Boss攻略', url: '/zh/elden-ring/malenia-guide' },
-      { title: '最佳起始职业排名', url: '/zh/elden-ring/starting-classes' },
-      { title: '宁姆格福完整早期攻略', url: '/zh/elden-ring/limgrave-guide' },
+      { title: '玛莲妮亚,米凯拉之刃 - 终极Boss攻略', url: '/game-guides-hub/zh/elden-ring/malenia-guide' },
+      { title: '最佳起始职业排名', url: '/game-guides-hub/zh/elden-ring/starting-classes' },
+      { title: '宁姆格福完整早期攻略', url: '/game-guides-hub/zh/elden-ring/limgrave-guide' },
     ]
   },
   {
@@ -21,9 +21,9 @@ const games = [
     color: '#4a90d9',
     description: '全收集攻略、解谜方案和每个区域的资源规划。',
     guides: [
-      { title: '纳维亚区域 - 完整金核/黑核收集攻略', url: '/zh/tower-of-fantasy/navia-collection' },
-      { title: '源器机制新手指南', url: '/zh/tower-of-fantasy/source-mechanics' },
-      { title: '2026最佳队伍搭配', url: '/zh/tower-of-fantasy/team-comps' },
+      { title: '纳维亚区域 - 完整金核/黑核收集攻略', url: '/game-guides-hub/zh/tower-of-fantasy/navia-collection' },
+      { title: '源器机制新手指南', url: '/game-guides-hub/zh/tower-of-fantasy/source-mechanics' },
+      { title: '2026最佳队伍搭配', url: '/game-guides-hub/zh/tower-of-fantasy/team-comps' },
     ]
   },
   {
@@ -33,9 +33,9 @@ const games = [
     color: '#fcee09',
     description: '专业Build攻略、义体推荐和全结局通关指南。',
     guides: [
-      { title: '赛博精神病/网络行者Build - 终极指南', url: '/zh/cyberpunk-2077/cyber-psycho-build' },
-      { title: '全结局详解及解锁方法', url: '/zh/cyberpunk-2077/all-endings' },
-      { title: '最佳标志性武器及获取地点', url: '/zh/cyberpunk-2077/iconic-weapons' },
+      { title: '赛博精神病/网络行者Build - 终极指南', url: '/game-guides-hub/zh/cyberpunk-2077/cyber-psycho-build' },
+      { title: '全结局详解及解锁方法', url: '/game-guides-hub/zh/cyberpunk-2077/all-endings' },
+      { title: '最佳标志性武器及获取地点', url: '/game-guides-hub/zh/cyberpunk-2077/iconic-weapons' },
     ]
   }
 ];
@@ -58,7 +58,7 @@ const games = [
             <li><a href={guide.url}>{guide.title}</a></li>
           ))}
         </ul>
-        <a href={`/zh/${game.slug}`} class="view-all">查看所有攻略 →</a>
+        <a href={`/game-guides-hub/zh/${game.slug}`} class="view-all">查看所有攻略 →</a>
       </article>
     ))}
   </section>
