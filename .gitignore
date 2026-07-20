@@ -1,17 +1,15 @@
-# Dependencies
+# Source files (not needed for deployment)
+src/
 node_modules/
-
-# Environment
-.env
-.env.local
-.env.*.local
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
+.github/
+package.json
+package-lock.json
+astro.config.mjs
+tsconfig.json
+AGENTS.md
+CLAUDE.md
+DEPLOYMENT-GUIDE.md
+PROJECT-SUMMARY.md
 
 # OS
 .DS_Store
@@ -19,8 +17,3 @@ Thumbs.db
 
 # Logs
 *.log
-npm-debug.log*
-
-# Astro
-.astro/
-dist/
