@@ -1,0 +1,99 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+
+const guides = [
+  { title: 'Navia Region - Complete Gold & Black Nuclear Collection', url: '/tower-of-fantasy/navia-collection', description: 'Every Gold Nuclear and Black Nuclear in Navia with coordinates, puzzle solutions, and optimal routes.' },
+  { title: 'Beginner\'s Guide to Source Mechanics', url: '/tower-of-fantasy/source-mechanics', description: 'Master Source abilities, understand elemental reactions, and optimize your combat rotation.' },
+  { title: 'Best Team Compositions 2026', url: '/tower-of-fantasy/team-comps', description: 'Updated team builds for every playstyle — from solo DPS to support-heavy raid compositions.' },
+];
+---
+
+<Layout title="Tower of Fantasy Guides - Collection & Build Guides" description="Complete Tower of Fantasy guides with collection routes, puzzle solutions, and team compositions for every region.">
+  <article>
+    <h1>🗼 Tower of Fantasy Guides</h1>
+    <p class="intro">Tower of Fantasy's open world is packed with collectibles, puzzles, and hidden secrets. Our guides focus on what matters: complete collection routes with coordinates, efficient resource farming, and team builds that actually work.</p>
+
+    <div class="guide-grid">
+      {guides.map(guide => (
+        <a href={guide.url} class="guide-card">
+          <h3>{guide.title}</h3>
+          <p>{guide.description}</p>
+          <span class="read-more">Read Guide →</span>
+        </a>
+      ))}
+    </div>
+
+    <section class="tips">
+      <h2>💡 Collection Tips</h2>
+      <ul>
+        <li><strong>Plan your route.</strong> Don't just run around randomly — our guides provide optimized paths so you never backtrack.</li>
+        <li><strong>Check prerequisites.</strong> Some collectibles require specific Source abilities or quest completion.</li>
+        <li><strong>Use the map.</strong> Every item includes in-game coordinates so you can teleport to the nearest waypoint.</li>
+        <li><strong>Track your progress.</strong> Use our checklists to mark items as you find them.</li>
+      </ul>
+    </section>
+  </article>
+</Layout>
+
+<style>
+  .intro {
+    font-size: 1.125rem;
+    color: #555;
+    line-height: 1.8;
+    margin-bottom: 2rem;
+  }
+
+  .guide-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+  }
+
+  .guide-card {
+    background: #f9f9f9;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 4px solid #4a90d9;
+    transition: background 0.3s, transform 0.3s;
+    display: block;
+  }
+
+  .guide-card:hover {
+    background: #f0f0f0;
+    transform: translateX(4px);
+    text-decoration: none;
+  }
+
+  .guide-card h3 {
+    color: #1a1a2e;
+    margin-bottom: 0.5rem;
+  }
+
+  .guide-card p {
+    color: #666;
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+  }
+
+  .read-more {
+    color: #4a90d9;
+    font-weight: 600;
+  }
+
+  .tips {
+    background: #d1ecf1;
+    padding: 2rem;
+    border-radius: 8px;
+    border-left: 4px solid #17a2b8;
+    margin-top: 3rem;
+  }
+
+  .tips h2 {
+    border: none;
+  }
+
+  .tips li {
+    margin-bottom: 1rem;
+  }
+</style>

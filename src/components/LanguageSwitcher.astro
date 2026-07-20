@@ -1,0 +1,57 @@
+---
+interface Props {
+  currentLang: 'en' | 'zh';
+  currentPath: string;
+}
+
+const { currentLang, currentPath } = Astro.props;
+
+// Generate the alternate language URL
+const getAlternateUrl = () => {
+  const otherLang = currentLang === 'en' ? 'zh' : 'en';
+
+  // Remove current language prefix and add new one
+  const pathWithoutLang = currentPath.replace(/^\/(en|zh)/, '');
+  return `/${otherLang}${pathWithoutLang}`;
+};
+
+const alternateUrl = getAlternateUrl();
+---
+
+<div class="language-switcher">
+  <a href={alternateUrl} class="lang-toggle">
+    {currentLang === 'en' ? '🇨🇳 中文' : '🇬🇧 English'}
+  </a>
+</div>
+
+<style>
+  .language-switcher {
+    margin-left: auto;
+    padding-left: 1rem;
+  }
+
+  .lang-toggle {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    color: white;
+    text-decoration: none;
+    font-size: 0.875rem;
+    transition: all 0.3s;
+  }
+
+  .lang-toggle:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+    text-decoration: none;
+  }
+
+  @media (max-width: 768px) {
+    .language-switcher {
+      margin: 1rem 0 0 0;
+      padding-left: 0;
+    }
+  }
+</style>

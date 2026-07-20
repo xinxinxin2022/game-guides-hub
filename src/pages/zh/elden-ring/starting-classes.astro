@@ -1,0 +1,136 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+
+const title = "最佳起始职业排名 - 艾尔登法环攻略";
+const description = "全职业分析,适合近战、魔法和混合Build。找到最适合您玩法的起始职业。";
+---
+
+<Layout lang="zh" {title} {description}>
+  <article class="guide">
+    <h1>🎓 最佳起始职业排名</h1>
+
+    <div class="intro">
+      <p>您的起始职业决定您的初始属性、装备和玩法。虽然后期可以重新分配,但选择正确的职业能节省数小时的尴尬早期游戏。以下是按不同Build可行性排名的所有职业。</p>
+    </div>
+
+    <section class="tier-list">
+      <h2>🏆 排名概览</h2>
+      <table>
+        <tr>
+          <th>等级</th>
+          <th>职业</th>
+          <th>最适合</th>
+          <th>难度</th>
+        </tr>
+        <tr class="tier-s">
+          <td><strong>S</strong></td>
+          <td>武士</td>
+          <td>近战、敏捷Build</td>
+          <td>⭐⭐(简单)</td>
+        </tr>
+        <tr class="tier-s">
+          <td><strong>S</strong></td>
+          <td>占星者</td>
+          <td>魔法、智力Build</td>
+          <td>⭐⭐(简单)</td>
+        </tr>
+        <tr class="tier-a">
+          <td><strong>A</strong></td>
+          <td>先知</td>
+          <td>祈祷、信仰Build</td>
+          <td>⭐⭐⭐(中等)</td>
+        </tr>
+        <tr class="tier-a">
+          <td><strong>A</strong></td>
+          <td>战士</td>
+          <td>双持、敏捷Build</td>
+          <td>⭐⭐⭐(中等)</td>
+        </tr>
+        <tr class="tier-b">
+          <td><strong>B</strong></td>
+          <td>英雄</td>
+          <td>力量Build、坦克</td>
+          <td>⭐⭐⭐(中等)</td>
+        </tr>
+        <tr class="tier-b">
+          <td><strong>B</strong></td>
+          <td>强盗</td>
+          <td>奥秘、出血Build</td>
+          <td>⭐⭐⭐(中等)</td>
+        </tr>
+        <tr class="tier-c">
+          <td><strong>C</strong></td>
+          <td>流浪者</td>
+          <td>质量Build(力量+敏捷)</td>
+          <td>⭐⭐⭐(中等)</td>
+        </tr>
+        <tr class="tier-c">
+          <td><strong>C</strong></td>
+          <td>密使</td>
+          <td>混合近战+信仰</td>
+          <td>⭐⭐⭐(中等)</td>
+        </tr>
+        <tr class="tier-d">
+          <td><strong>D</strong></td>
+          <td>囚犯</td>
+          <td>智力+敏捷混合</td>
+          <td>⭐⭐⭐⭐(困难)</td>
+        </tr>
+        <tr class="tier-d">
+          <td><strong>D</strong></td>
+          <td>无用之人</td>
+          <td>极限优化、挑战运行</td>
+          <td>⭐⭐⭐⭐⭐(非常困难)</td>
+        </tr>
+      </table>
+    </section>
+
+    <section class="recommendations">
+      <h2>💡 按玩法推荐</h2>
+
+      <div class="recommendation">
+        <h3>🗡️ 首次游玩/新手</h3>
+        <p><strong>选择:</strong> 武士或流浪者</p>
+        <p><strong>原因:</strong> 两者都有良好的起始装备和平衡的属性。武士的打刀很优秀,流浪者有高活力提供生存能力。</p>
+      </div>
+
+      <div class="recommendation">
+        <h3>🔮 纯魔法用户</h3>
+        <p><strong>选择:</strong> 占星者(魔法)或先知(祈祷)</p>
+        <p><strong>原因:</strong> 最高起始智力或信仰。您可以立即使用强大的法术,不会浪费点数。</p>
+      </div>
+
+      <div class="recommendation">
+        <h3>🩸 出血/奥秘Build</h3>
+        <p><strong>选择:</strong> 强盗或武士</p>
+        <p><strong>原因:</strong> 强盗有高奥秘适合出血Build。武士的打刀已经造成出血,后期可以用奥秘缩放。</p>
+      </div>
+
+      <div class="recommendation">
+        <h3>🛡️ 坦克/重甲</h3>
+        <p><strong>选择:</strong> 英雄或流浪者</p>
+        <p><strong>原因:</strong> 两者都有高活力和耐力,适合穿重甲和使用大武器。</p>
+      </div>
+    </section>
+
+    <div class="final-tip">
+      <h2>🎯 最终建议</h2>
+      <p>不要过度担心您的起始职业。您稍后可以使用幼体眼泪重新分配。最重要的是选择一个符合您早期游戏偏好的职业。随着找到更好的装备和发现偏好,您的Build会自然发展。</p>
+      <p><strong>记住:</strong> 活力是所有Build最重要的属性。尽快将其提升到20-25以获得生存能力。其他都可以等。</p>
+    </div>
+  </article>
+</Layout>
+
+<style>
+  .guide { line-height: 1.8; }
+  .intro { background: #f9f9f9; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; }
+  .tier-list table { margin: 1rem 0; }
+  .tier-s { background: #fff3cd; }
+  .tier-a { background: #d4edda; }
+  .tier-b { background: #d1ecf1; }
+  .tier-c { background: #f8d7da; }
+  .tier-d { background: #e2e3e5; }
+  .recommendation { background: #f9f9f9; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; border-left: 4px solid #28a745; }
+  .final-tip { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: white; padding: 2rem; border-radius: 12px; margin-top: 3rem; }
+  .final-tip h2 { color: #ffd700; border: none; }
+</style>

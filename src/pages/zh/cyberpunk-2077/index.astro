@@ -1,0 +1,99 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+
+const guides = [
+  { title: '赛博精神病/网络行者Build - 终极指南', url: '/zh/cyberpunk-2077/cyber-psycho-build', description: '赛博精神病玩法的完整Build攻略——义体、技能、武器和战斗循环。' },
+  { title: '全结局详解及解锁方法', url: '/zh/cyberpunk-2077/all-endings', description: '赛博朋克2077的每个结局,附带准确的要求、决策点和后果。' },
+  { title: '最佳标志性武器及获取地点', url: '/zh/cyberpunk-2077/iconic-weapons', description: '所有标志性武器的位置地图、属性,以及哪些Build最能发挥每个武器的优势。' },
+];
+---
+
+<Layout lang="zh" title="赛博朋克2077攻略 - Build与通关指南" description="专业的赛博朋克2077攻略,涵盖Build、义体、结局和夜之城所有标志性武器。">
+  <article>
+    <h1>🌃 赛博朋克2077攻略</h1>
+    <p class="intro">夜之城很残酷,但正确的Build能让您无敌。我们的攻略解析每个专长的数值、义体之间的协同效应,以及每种玩法的最优进阶路径。</p>
+
+    <div class="guide-grid">
+      {guides.map(guide => (
+        <a href={guide.url} class="guide-card">
+          <h3>{guide.title}</h3>
+          <p>{guide.description}</p>
+          <span class="read-more">阅读攻略 →</span>
+        </a>
+      ))}
+    </div>
+
+    <section class="tips">
+      <h2>💡 Build提示</h2>
+      <ul>
+        <li><strong>专注一种玩法。</strong>混合Build比专注Build弱。选择您的伤害类型并全力投入。</li>
+        <li><strong>义体比武器更重要。</strong>正确的操作系统和内部义体能让您的效率提升10倍。</li>
+        <li><strong>阅读专长说明。</strong>很多专长有隐藏的协同效应,从名称上看不出来。</li>
+        <li><strong>在重大决策前存档。</strong>某些选择会让您无法获得某些内容。保持多个存档。</li>
+      </ul>
+    </section>
+  </article>
+</Layout>
+
+<style>
+  .intro {
+    font-size: 1.125rem;
+    color: #555;
+    line-height: 1.8;
+    margin-bottom: 2rem;
+  }
+
+  .guide-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+  }
+
+  .guide-card {
+    background: #f9f9f9;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 4px solid #fcee09;
+    transition: background 0.3s, transform 0.3s;
+    display: block;
+  }
+
+  .guide-card:hover {
+    background: #f0f0f0;
+    transform: translateX(4px);
+    text-decoration: none;
+  }
+
+  .guide-card h3 {
+    color: #1a1a2e;
+    margin-bottom: 0.5rem;
+  }
+
+  .guide-card p {
+    color: #666;
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+  }
+
+  .read-more {
+    color: #d4a100;
+    font-weight: 600;
+  }
+
+  .tips {
+    background: #fff9e6;
+    padding: 2rem;
+    border-radius: 8px;
+    border-left: 4px solid #fcee09;
+    margin-top: 3rem;
+  }
+
+  .tips h2 {
+    border: none;
+  }
+
+  .tips li {
+    margin-bottom: 1rem;
+  }
+</style>

@@ -1,0 +1,99 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+
+const guides = [
+  { title: 'Cyber Psycho / Netrunner Build - Ultimate Guide', url: '/cyberpunk-2077/cyber-psycho-build', description: 'Complete build guide for the Cyber Psycho playstyle — cyberware, skills, weapons, and combat rotation.' },
+  { title: 'All Endings Explained & How to Unlock Them', url: '/cyberpunk-2077/all-endings', description: 'Every ending in Cyberpunk 2077 with exact requirements, decision points, and consequences.' },
+  { title: 'Best Iconic Weapons & Where to Find Them', url: '/cyberpunk-2077/iconic-weapons', description: 'All Iconic weapons mapped with locations, stats, and which builds benefit most from each.' },
+];
+---
+
+<Layout title="Cyberpunk 2077 Guides - Builds & Walkthroughs" description="Expert Cyberpunk 2077 guides covering builds, cyberware, endings, and all Iconic weapons in Night City.">
+  <article>
+    <h1>🌃 Cyberpunk 2077 Guides</h1>
+    <p class="intro">Night City is brutal, but the right build makes you unstoppable. Our guides break down the math behind every perk, the synergy between cyberware, and the optimal progression path for each playstyle.</p>
+
+    <div class="guide-grid">
+      {guides.map(guide => (
+        <a href={guide.url} class="guide-card">
+          <h3>{guide.title}</h3>
+          <p>{guide.description}</p>
+          <span class="read-more">Read Guide →</span>
+        </a>
+      ))}
+    </div>
+
+    <section class="tips">
+      <h2>💡 Build Tips</h2>
+      <ul>
+        <li><strong>Commit to one playstyle.</strong> Hybrid builds are weaker than focused builds. Pick your damage type and go all-in.</li>
+        <li><strong>Cyberware matters more than weapons.</strong> The right OS and internal cyberware can 10x your effectiveness.</li>
+        <li><strong>Read perk descriptions.</strong> Many perks have hidden synergies that aren't obvious from the name.</li>
+        <li><strong>Save before major decisions.</strong> Some choices lock you out of content. Keep multiple saves.</li>
+      </ul>
+    </section>
+  </article>
+</Layout>
+
+<style>
+  .intro {
+    font-size: 1.125rem;
+    color: #555;
+    line-height: 1.8;
+    margin-bottom: 2rem;
+  }
+
+  .guide-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+  }
+
+  .guide-card {
+    background: #f9f9f9;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 4px solid #fcee09;
+    transition: background 0.3s, transform 0.3s;
+    display: block;
+  }
+
+  .guide-card:hover {
+    background: #f0f0f0;
+    transform: translateX(4px);
+    text-decoration: none;
+  }
+
+  .guide-card h3 {
+    color: #1a1a2e;
+    margin-bottom: 0.5rem;
+  }
+
+  .guide-card p {
+    color: #666;
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+  }
+
+  .read-more {
+    color: #d4a100;
+    font-weight: 600;
+  }
+
+  .tips {
+    background: #fff9e6;
+    padding: 2rem;
+    border-radius: 8px;
+    border-left: 4px solid #fcee09;
+    margin-top: 3rem;
+  }
+
+  .tips h2 {
+    border: none;
+  }
+
+  .tips li {
+    margin-bottom: 1rem;
+  }
+</style>
