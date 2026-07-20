@@ -10,6 +10,9 @@ interface Props {
 
 const { title, description = "Comprehensive game guides for Elden Ring, Tower of Fantasy, and Cyberpunk 2077", image, lang = 'en' } = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+
+// Helper function to create URLs with base path
+const getURL = (path: string) => new URL(path, Astro.site).pathname;
 ---
 
 <!DOCTYPE html>
