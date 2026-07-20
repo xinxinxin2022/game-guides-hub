@@ -10,9 +10,17 @@ const { currentLang, currentPath } = Astro.props;
 const getAlternateUrl = () => {
   const otherLang = currentLang === 'en' ? 'zh' : 'en';
 
-  // Remove current language prefix and add new one
-  const pathWithoutLang = currentPath.replace(/^\/(en|zh)/, '');
-  return `/${otherLang}${pathWithoutLang}`;
+  // Remove language prefix and base path, then reconstruct
+  let pathWithoutLang = currentPath
+    .replace(/^\/(en|zh)/, '')           // Remove /en or /zh prefix
+    .replace(/^\/?game-guides-hub/, ''); // Remove base path if present
+
+  // Ensure path starts with /
+  if (!pathWithoutLang.startsWith('/')) {
+    pathWithoutLang = '/' + pathWithoutLang;
+  }
+
+  return `/game-guides-hub/${otherLang}${pathWithoutLang}`;
 };
 
 const alternateUrl = getAlternateUrl();
@@ -20,7 +28,7 @@ const alternateUrl = getAlternateUrl();
 
 <div class="language-switcher">
   <a href={alternateUrl} class="lang-toggle">
-    {currentLang === 'en' ? '🇨🇳 中文' : '🇬🇧 English'}
+    {currentLang === 'en' ? '🇨🇳 中文' : '🇧 English'}
   </a>
 </div>
 
