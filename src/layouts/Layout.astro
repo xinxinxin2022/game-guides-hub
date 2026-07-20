@@ -42,9 +42,9 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       <nav>
         <a href={`/${lang}/`} class="logo">{lang === 'en' ? '🎮 Game Guides Hub' : '🎮 游戏攻略中心'}</a>
         <ul class="nav-links">
-          <li><a href={`/elden-ring`}>{lang === 'en' ? 'Elden Ring' : '艾尔登法环'}</a></li>
-          <li><a href={`/tower-of-fantasy`}>{lang === 'en' ? 'Tower of Fantasy' : '幻塔'}</a></li>
-          <li><a href={`/cyberpunk-2077`}>{lang === 'en' ? 'Cyberpunk 2077' : '赛博朋克2077'}</a></li>
+          <li><a href={`/${lang}/elden-ring`}>{lang === 'en' ? 'Elden Ring' : '艾尔登法环'}</a></li>
+          <li><a href={`/${lang}/tower-of-fantasy`}>{lang === 'en' ? 'Tower of Fantasy' : '幻塔'}</a></li>
+          <li><a href={`/${lang}/cyberpunk-2077`}>{lang === 'en' ? 'Cyberpunk 2077' : '赛博朋克2077'}</a></li>
         </ul>
         <LanguageSwitcher currentLang={lang} currentPath={Astro.url.pathname} />
       </nav>
