@@ -9,9 +9,9 @@ const games = [
     color: '#c41e3a',
     description: 'Master the Lands Between with comprehensive boss guides, build recommendations, and exploration tips.',
     guides: [
-      { title: 'Malenia, Blade of Miquella - Ultimate Boss Guide', url: '/game-guides-hub/en/elden-ring/malenia-guide' },
-      { title: 'Best Starting Classes Ranked', url: '/game-guides-hub/en/elden-ring/starting-classes' },
-      { title: 'Complete Limgrave Early Game Guide', url: '/game-guides-hub/en/elden-ring/limgrave-guide' },
+      { title: 'Malenia, Blade of Miquella - Ultimate Boss Guide', url: '/en/elden-ring/malenia-guide' },
+      { title: 'Best Starting Classes Ranked', url: '/en/elden-ring/starting-classes' },
+      { title: 'Complete Limgrave Early Game Guide', url: '/en/elden-ring/limgrave-guide' },
     ]
   },
   {
@@ -21,9 +21,9 @@ const games = [
     color: '#4a90d9',
     description: 'Full collection guides, puzzle solutions, and resource planning for every region.',
     guides: [
-      { title: 'Navia Region - Complete Gold & Black Nuclear Collection', url: '/game-guides-hub/en/tower-of-fantasy/navia-collection' },
-      { title: 'Beginner\'s Guide to Source Mechanics', url: '/game-guides-hub/en/tower-of-fantasy/source-mechanics' },
-      { title: 'Best Team Compositions 2026', url: '/game-guides-hub/en/tower-of-fantasy/team-comps' },
+      { title: 'Navia Region - Complete Gold & Black Nuclear Collection', url: '/en/tower-of-fantasy/navia-collection' },
+      { title: 'Beginner\'s Guide to Source Mechanics', url: '/en/tower-of-fantasy/source-mechanics' },
+      { title: 'Best Team Compositions 2026', url: '/en/tower-of-fantasy/team-comps' },
     ]
   },
   {
@@ -33,9 +33,9 @@ const games = [
     color: '#fcee09',
     description: 'Expert build guides, cyberware recommendations, and all ending walkthroughs.',
     guides: [
-      { title: 'Cyber Psycho / Netrunner Build - Ultimate Guide', url: '/game-guides-hub/en/cyberpunk-2077/cyber-psycho-build' },
-      { title: 'All Endings Explained & How to Unlock Them', url: '/game-guides-hub/en/cyberpunk-2077/all-endings' },
-      { title: 'Best Iconic Weapons & Where to Find Them', url: '/game-guides-hub/en/cyberpunk-2077/iconic-weapons' },
+      { title: 'Cyber Psycho / Netrunner Build - Ultimate Guide', url: '/en/cyberpunk-2077/cyber-psycho-build' },
+      { title: 'All Endings Explained & How to Unlock Them', url: '/en/cyberpunk-2077/all-endings' },
+      { title: 'Best Iconic Weapons & Where to Find Them', url: '/en/cyberpunk-2077/iconic-weapons' },
     ]
   }
 ];
@@ -58,7 +58,7 @@ const games = [
             <li><a href={guide.url}>{guide.title}</a></li>
           ))}
         </ul>
-        <a href={`/game-guides-hub/en/${game.slug}`} class="view-all">View All Guides →</a>
+        <a href={`/en/${game.slug}`} class="view-all">View All Guides →</a>
       </article>
     ))}
   </section>
