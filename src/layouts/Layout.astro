@@ -12,7 +12,7 @@ const { title, description = "Comprehensive game guides for Elden Ring, Tower of
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
 // Helper function to create URLs with base path
-const getURL = (path: string) => new URL(path, Astro.site).pathname;
+const getURL = (path: string) => `/game-guides-hub${path}`;
 ---
 
 <!DOCTYPE html>
