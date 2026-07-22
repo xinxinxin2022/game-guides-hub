@@ -1,14 +1,9 @@
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import type { Locale } from '@/i18n/config';
-import { I18nProvider } from '@/lib/i18n';
-import enMessages from '@/messages/en.json';
-import zhMessages from '@/messages/zh.json';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import '@/styles/globals.css';
-
-const messagesMap: Record<string, unknown> = { en: enMessages, zh: zhMessages };
 
 export function generateStaticParams() {
   return routing.locales.map(locale => ({ locale }));
@@ -21,13 +16,10 @@ export default function LocaleLayout({
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
 }) {
-  // For static export, we render both locales
-  return (
-    <StaticLocaleLayout params={params}>{children}</StaticLocaleLayout>
-  );
+  return <LayoutContent params={params}>{children}</LayoutContent>;
 }
 
-async function StaticLocaleLayout({
+async function LayoutContent({
   children,
   params,
 }: {
@@ -40,8 +32,6 @@ async function StaticLocaleLayout({
     notFound();
   }
 
-  const messages = messagesMap[locale] || messagesMap.en;
-
   return (
     <html lang={locale} className="dark" suppressHydrationWarning>
       <head>
@@ -53,15 +43,13 @@ async function StaticLocaleLayout({
         />
       </head>
       <body className="min-h-screen bg-dark-50 text-zinc-100 antialiased">
-        <I18nProvider locale={locale} messages={messages as Record<string, unknown>}>
-          <div className="flex min-h-screen flex-col">
-            <Header />
-            <main className="flex-1">
-              {children}
-            </main>
-            <Footer />
-          </div>
-        </I18nProvider>
+        <div className="flex min-h-screen flex-col">
+          <Header locale={locale} />
+          <main className="flex-1">
+            {children}
+          </main>
+          <Footer locale={locale} />
+        </div>
       </body>
     </html>
   );

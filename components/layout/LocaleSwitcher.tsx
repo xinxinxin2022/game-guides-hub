@@ -1,6 +1,6 @@
 'use client';
 
-import { useLocale } from '@/lib/i18n';
+import { useLocale } from 'next-intl';
 import { usePathname, useRouter } from 'next/navigation';
 import { locales, localeNames, Locale } from '@/i18n/config';
 
@@ -10,7 +10,6 @@ export function LocaleSwitcher() {
   const router = useRouter();
 
   const switchLocale = (newLocale: Locale) => {
-    // Replace current locale segment with new one
     const segments = pathname.split('/');
     segments[1] = newLocale;
     router.push(segments.join('/'));
@@ -28,7 +27,6 @@ export function LocaleSwitcher() {
         </svg>
       </button>
 
-      {/* Dropdown — no gap so hover stays connected */}
       <div className="absolute right-0 top-full hidden group-hover:block z-50">
         <div className="rounded-b-lg border border-t-0 border-zinc-700 bg-dark-50 shadow-xl py-1 min-w-[120px]">
           {locales.map(l => (
@@ -36,9 +34,7 @@ export function LocaleSwitcher() {
               key={l}
               onClick={() => switchLocale(l)}
               className={`block w-full px-4 py-2 text-left text-sm transition-colors ${
-                l === locale
-                  ? 'bg-primary-500/10 text-primary-400'
-                  : 'text-zinc-300 hover:bg-zinc-800 hover:text-white'
+                l === locale ? 'bg-primary-500/10 text-primary-400' : 'text-zinc-300 hover:bg-zinc-800 hover:text-white'
               }`}
             >
               {localeNames[l]}

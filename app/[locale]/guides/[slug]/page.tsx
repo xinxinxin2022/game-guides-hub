@@ -4,10 +4,7 @@ import { generateSEO, generateArticleSchema, generateBreadcrumbSchema } from '@/
 import { GuideCard } from '@/components/ui/GuideCard';
 import { AdSlot, InArticleAd } from '@/components/ads/AdSlot';
 import { formatDate } from '@/lib/utils';
-import enM from '@/messages/en.json';
-import zhM from '@/messages/zh.json';
-const _m: Record<string, Record<string, unknown>> = { en: enM, zh: zhM };
-function _t(l: string, k: string): string { const ks = k.split('.'); let c: unknown = _m[l] || _m.en; for (const x of ks) { if (c && typeof c === 'object') c = (c as Record<string, unknown>)[x]; else return k; } return typeof c === 'string' ? c : k; }
+import { getT } from '@/lib/i18n-simple';
 import { marked } from 'marked';
 
 marked.setOptions({ breaks: true, gfm: true });
@@ -45,6 +42,9 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
   if (!guide) notFound();
 
   const relatedGuides = getRelatedGuides(slug, locale);
+  const t = getT(locale, 'guides');
+  const tNav = getT(locale, 'common.nav');
+
   const articleSchema = generateArticleSchema(
     guide.title, guide.description, `/guides/${slug}`,
     guide.coverImage || '', guide.publishedAt, guide.updatedAt
@@ -65,9 +65,9 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
 
       <nav className="mb-8 text-sm text-zinc-400">
-        <a href={`/${locale}`} className="hover:text-primary-400">{_t(locale, 'common.nav.home')}</a>
+        <a href={`/${locale}`} className="hover:text-primary-400">{tNav('home')}</a>
         <span className="mx-2">/</span>
-        <a href={`/${locale}/guides`} className="hover:text-primary-400">{_t(locale, 'common.nav.guides')}</a>
+        <a href={`/${locale}/guides`} className="hover:text-primary-400">{tNav('guides')}</a>
         <span className="mx-2">/</span>
         <span className="text-zinc-200">{guide.title}</span>
       </nav>
@@ -91,14 +91,14 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
             <div className="mt-4 flex items-center gap-4 text-sm text-zinc-400">
               <time dateTime={guide.publishedAt}>{formatDate(guide.publishedAt, locale)}</time>
               <span>•</span>
-              <span>{guide.readingTime} {_t(locale, 'guides.readTime')}</span>
+              <span>{guide.readingTime} {t('readTime')}</span>
             </div>
           </header>
 
           <div dangerouslySetInnerHTML={{ __html: renderMarkdown(intro) }} />
 
           <div className="my-8 rounded-lg border border-zinc-800 bg-zinc-900/50 p-6">
-            <h2 className="text-xl font-bold text-white mb-4">{_t(locale, 'guides.tableOfContents')}</h2>
+            <h2 className="text-xl font-bold text-white mb-4">{t('tableOfContents')}</h2>
             <ul className="space-y-2">
               {sections.map((section, idx) => {
                 const title = section.split('\n')[0];
@@ -134,7 +134,7 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
 
       {relatedGuides.length > 0 && (
         <section className="mt-16">
-          <h2 className="text-3xl font-bold text-white mb-8">{_t(locale, 'guides.relatedGuides')}</h2>
+          <h2 className="text-3xl font-bold text-white mb-8">{t('relatedGuides')}</h2>
           <div className="grid gap-6 md:grid-cols-3">
             {relatedGuides.map(related => (
               <GuideCard key={related.slug} slug={related.slug} title={related.title}
