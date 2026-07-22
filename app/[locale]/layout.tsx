@@ -4,7 +4,6 @@ import type { Locale } from '@/i18n/config';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import '@/styles/globals.css';
-import Script from 'next/script';
 
 export function generateStaticParams() {
   return routing.locales.map(locale => ({ locale }));
@@ -42,13 +41,8 @@ async function LayoutContent({
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
           rel="stylesheet"
         />
-        {/* Google AdSense */}
-        <Script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1812733940760212"
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
+        <meta name="google-adsense-account" content="ca-pub-1812733940760212" />
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1812733940760212" crossOrigin="anonymous"></script>
       </head>
       <body className="min-h-screen bg-dark-50 text-zinc-100 antialiased">
         <div className="flex min-h-screen flex-col">
