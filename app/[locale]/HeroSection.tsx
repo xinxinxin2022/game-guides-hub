@@ -41,7 +41,7 @@ export function HeroSection() {
           <p className="mt-6 text-xl text-zinc-300 sm:text-2xl animate-fade-in" style={{ animationDelay: '0.2s' }}>
             {t('subtitle')}
           </p>
-          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in" style={{ animationDelay: '0.4s' }}>
+          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in" style={{ animationDelay: '0.4s' }}>
             <Link
               href={`/${locale}/guides`}
               className="btn-primary"
@@ -56,7 +56,7 @@ export function HeroSection() {
       </div>
 
       {/* Bottom fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-dark-50 to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-dark-50 to-transparent" />
     </section>
   );
 }

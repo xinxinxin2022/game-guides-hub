@@ -212,8 +212,8 @@
 
   /* Prevent layout shift from ads */
   .ad-slot {
-    @apply relative min-h-[90px] bg-zinc-900/30
-           border border-dashed border-zinc-700/50 rounded-lg
+    @apply relative min-h-[0px] bg-zinc-900/30
+           rounded-lg
            flex items-center justify-center;
   }
 }

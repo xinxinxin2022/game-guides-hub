@@ -22,7 +22,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   return (
     <div className="flex flex-col">
       <HeroSection />
-      <section className="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
+      <section className="mx-auto max-w-7xl px-4 py-2 sm:px-6 lg:px-8">
         <AdSlot size="leaderboard" />
       </section>
       <FeaturedGuides locale={locale} />
