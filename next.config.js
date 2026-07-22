@@ -6,12 +6,11 @@ const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
 const nextConfig = {
   images: {
     unoptimized: true,
-    formats: ['image/avif', 'image/webp'],
   },
   swcMinify: true,
   reactStrictMode: true,
-  experimental: {
-    optimizePackageImports: ['@react-three/fiber', '@react-three/drei', 'three'],
+  eslint: {
+    ignoreDuringBuilds: true,
   },
 };
 

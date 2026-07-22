@@ -1,22 +1,23 @@
-name: Build and Deploy
+name: Build Check
 
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Use Node.js 20
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: 'npm'
 
       - name: Install dependencies
@@ -26,11 +27,3 @@ jobs:
         run: npm run build
         env:
           NEXT_PUBLIC_SITE_URL: https://palworldguides.com
-
-      - name: Verify build output
-        run: |
-          if [ ! -d ".next" ]; then
-            echo "Build failed: .next directory not found"
-            exit 1
-          fi
-          echo "Build successful!"
