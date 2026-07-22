@@ -1,349 +1,259 @@
-# 🚀 部署到 GitHub Pages 完整指南
+# PalworldGuides — Deployment Guide
 
-## 📋 前置准备
+## Vercel Deployment (Recommended)
 
-1. **GitHub 账号** - 如果没有,去 [github.com](https://github.com) 注册
-2. **Git 已安装** - 终端运行 `git --version` 检查
-3. **Node.js 已安装** - 终端运行 `node --version` 检查
+### Option 1: Git Integration (Easiest)
 
----
+1. Push your code to GitHub:
+   ```bash
+   cd palworld-guides
+   git init
+   git add .
+   git commit -m "Initial commit: PalworldGuides website"
+   git remote add origin https://github.com/YOUR_USERNAME/palworld-guides.git
+   git push -u origin main
+   ```
 
-## 🔧 步骤 1: 配置 Astro 支持 GitHub Pages
+2. Go to [vercel.com](https://vercel.com) and sign up/login
 
-### 1.1 修改 `astro.config.mjs`
+3. Click "New Project" → Import your GitHub repository
 
-将配置更新为:
+4. Configure:
+   - Framework Preset: Next.js
+   - Build Command: `npm run build`
+   - Output Directory: `.next`
+   - Install Command: `npm install`
 
-```javascript
-// @ts-check
-import { defineConfig } from 'astro/config';
+5. Add Environment Variables:
+   ```
+   NEXT_PUBLIC_SITE_URL=https://yourdomain.com
+   NEXT_PUBLIC_ADSENSE_CA_ID=ca-pub-xxxxxxxx
+   ```
 
-// https://astro.build/config
-export default defineConfig({
-  site: 'https://你的用户名.github.io',  // 改成你的 GitHub 用户名
-  base: '/game-guides-hub',               // 仓库名(下面会创建)
-  output: 'static',
-});
-```
+6. Click "Deploy" — Vercel will auto-deploy on every push
 
-**⚠️ 重要:** 
-- 把 `你的用户名` 替换为你的真实 GitHub 用户名
-- `base` 的值必须和你要创建的仓库名一致
-
-### 1.2 重新构建项目
+### Option 2: Vercel CLI
 
 ```bash
-cd game-guides-hub
+# Install Vercel CLI
+npm i -g vercel
+
+# Login
+vercel login
+
+# Deploy to staging
+vercel
+
+# Deploy to production
+vercel --prod
+```
+
+## Custom Domain Setup
+
+1. In Vercel dashboard → Project Settings → Domains
+2. Add your domain (e.g., `palworldguides.com`)
+3. Follow DNS instructions:
+   - Add A record: `76.76.21.21`
+   - Add CNAME: `cname.vercel-dns.com`
+4. Wait for DNS propagation (up to 48 hours)
+
+## GitHub Pages Deployment (Static Export)
+
+### Step 1: Enable Static Export
+
+Edit `next.config.js`:
+```javascript
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  output: 'export', // Enable static export
+  images: {
+    unoptimized: true, // Required for static export
+  },
+};
+```
+
+### Step 2: Build
+
+```bash
 npm run build
 ```
 
----
+This generates the `out/` directory.
 
-## 📦 步骤 2: 初始化 Git 仓库
+### Step 3: Deploy to GitHub Pages
 
-### 2.1 在项目根目录初始化 Git
-
-```bash
-cd game-guides-hub
-git init
-```
-
-### 2.2 创建 `.gitignore` 文件
-
-```bash
-cat > .gitignore << 'EOF'
-# Dependencies
-node_modules/
-
-# Build output
-dist/
-
-# Environment
-.env
-.env.local
-.env.*.local
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Logs
-*.log
-npm-debug.log*
-
-# Astro
-.astro/
-EOF
-```
-
-### 2.3 添加所有文件并提交
-
-```bash
-git add .
-git commit -m "Initial commit: Game guides website with i18n support"
-```
-
----
-
-## 🌐 步骤 3: 创建 GitHub 仓库
-
-### 3.1 在 GitHub 创建新仓库
-
-1. 访问 [https://github.com/new](https://github.com/new)
-2. 填写信息:
-   - **Repository name**: `game-guides-hub` (必须与 `astro.config.mjs` 中的 `base` 一致)
-   - **Description**: `游戏攻略网站 - 艾尔登法环、幻塔、赛博朋克2077攻略`
-   - **Public** ✅ (GitHub Pages 免费版只支持公开仓库)
-   - **不要**勾选 "Initialize this repository with a README"
-   - **不要**勾选 "Add .gitignore"
-   - **不要**勾选 "Choose a license"
-
-3. 点击 **Create repository**
-
-### 3.2 关联远程仓库
-
-```bash
-# 替换为你的 GitHub 用户名
-git remote add origin https://github.com/你的用户名/game-guides-hub.git
-git branch -M main
-git push -u origin main
-```
-
----
-
-## ⚙️ 步骤 4: 配置 GitHub Actions 自动部署
-
-### 4.1 创建工作流文件
-
-```bash
-mkdir -p .github/workflows
-```
-
-### 4.2 创建部署工作流
-
-创建文件 `.github/workflows/deploy.yml`:
+1. Create `.github/workflows/deploy.yml`:
 
 ```yaml
 name: Deploy to GitHub Pages
 
 on:
-  # 每次推送到 main 分支时触发
   push:
     branches: [main]
-  # 允许手动触发
-  workflow_dispatch:
 
-# 设置 GITHUB_TOKEN 权限
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# 允许一个并发部署
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
+          cache: npm
 
-      - name: Install dependencies
-        run: npm ci
+      - run: npm ci
+      - run: npm run build
 
-      - name: Build with Astro
-        run: npm run build
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist
+          path: ./out
 
   deploy:
+    needs: build
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
     steps:
-      - name: Deploy to GitHub Pages
+      - uses: actions/deploy-pages@v4
         id: deployment
-        uses: actions/deploy-pages@v4
 ```
 
-### 4.3 提交工作流文件
+2. Go to GitHub → Repository Settings → Pages
+3. Source: "GitHub Actions"
+4. Push to main branch — site will auto-deploy
+
+## Post-Deployment Checklist
+
+### SEO Verification
+
+- [ ] Check `robots.txt` is accessible
+- [ ] Verify `sitemap.xml` is generated
+- [ ] Test Open Graph tags with [Facebook Debugger](https://developers.facebook.com/tools/debug/)
+- [ ] Test Twitter Card with [Twitter Card Validator](https://cards-dev.twitter.com/validator)
+- [ ] Submit sitemap to [Google Search Console](https://search.google.com/search-console)
+- [ ] Submit sitemap to [Bing Webmaster Tools](https://www.bing.com/webmasters)
+
+### Performance Testing
+
+- [ ] Test with [Google PageSpeed Insights](https://pagespeed.web.dev/)
+- [ ] Target scores: Mobile 90+, Desktop 95+
+- [ ] Check Core Web Vitals: LCP < 2.5s, FID < 100ms, CLS < 0.1
+- [ ] Verify 3D scene loads asynchronously
+- [ ] Check image optimization (WebP/AVIF)
+
+### Google Ads Setup
+
+1. Apply for Google AdSense at [google.com/adsense](https://www.google.com/adsense)
+2. Get approved (usually 24-48 hours)
+3. Add AdSense code to `app/layout.tsx`:
+
+```tsx
+<Script
+  async
+  src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXX"
+  strategy="afterInteractive"
+/>
+```
+
+4. Replace placeholder in `components/ads/AdSlot.tsx`:
+
+```tsx
+<ins
+  className="adsbygoogle"
+  style={{ display: 'block' }}
+  data-ad-client="ca-pub-XXXXXXXX"
+  data-ad-slot="YYYYYYYY"
+  data-ad-format="auto"
+  data-full-width-responsive="true"
+/>
+```
+
+5. Test ads appear correctly
+
+### Analytics Setup (Optional)
+
+1. Set up Google Analytics at [analytics.google.com](https://analytics.google.com)
+2. Add to `app/layout.tsx`:
+
+```tsx
+import Script from 'next/script';
+
+<Script
+  strategy="afterInteractive"
+  src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+/>
+<Script
+  id="google-analytics"
+  strategy="afterInteractive"
+  dangerouslySetInnerHTML={{
+    __html: `
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}');
+    `,
+  }}
+/>
+```
+
+## Monitoring
+
+### Uptime Monitoring
+- [UptimeRobot](https://uptimerobot.com/) — Free monitoring
+- [Better Uptime](https://betteruptime.com/) — Advanced monitoring
+
+### Performance Monitoring
+- [Google PageSpeed Insights API](https://developers.google.com/speed/docs/insights/v5/get-started)
+- [WebPageTest](https://www.webpagetest.org/)
+
+### SEO Monitoring
+- Google Search Console — Search performance
+- Ahrefs / SEMrush — Keyword rankings
+
+## Troubleshooting
+
+### 3D Scene Not Loading
+
+- Check browser console for WebGL errors
+- Ensure Three.js imports are dynamic (`next/dynamic`)
+- Test on different devices/browsers
+- Fallback to static image if WebGL unsupported
+
+### Build Fails
 
 ```bash
-git add .github/workflows/deploy.yml
-git commit -m "Add GitHub Actions workflow for deployment"
-git push origin main
-```
-
----
-
-## 🎯 步骤 5: 启用 GitHub Pages
-
-### 5.1 配置 Pages 设置
-
-1. 访问你的仓库: `https://github.com/你的用户名/game-guides-hub`
-2. 点击 **Settings** (设置)
-3. 左侧菜单选择 **Pages**
-4. 在 **Source** 部分:
-   - **Source**: 选择 `GitHub Actions`
-5. 保存设置
-
-### 5.2 等待部署完成
-
-- GitHub Actions 会自动构建和部署你的网站
-- 在 **Actions** 标签页查看部署进度
-- 通常需要 2-3 分钟
-
-### 5.3 访问你的网站
-
-部署完成后,你的网站地址是:
-```
-https://你的用户名.github.io/game-guides-hub/
-```
-
-**具体页面:**
-- 首页: `https://你的用户名.github.io/game-guides-hub/`
-- 英文首页: `https://你的用户名.github.io/game-guides-hub/en/`
-- 中文首页: `https://你的用户名.github.io/game-guides-hub/zh/`
-
----
-
-## 🔄 步骤 6: 后续更新流程
-
-每次修改代码后,只需:
-
-```bash
-# 1. 修改代码
-# 2. 构建测试
+# Clear cache
+rm -rf .next node_modules
+npm install
 npm run build
-
-# 3. 提交更改
-git add .
-git commit -m "描述你的更改"
-git push origin main
 ```
 
-GitHub Actions 会自动重新部署!
+### i18n Routes Not Working
+
+- Verify `middleware.ts` is in project root
+- Check `i18n/config.ts` has correct locales
+- Test with `/en` and `/zh` prefixes
+
+### Images Not Loading
+
+- Check `public/images/` directory
+- Verify image paths in frontmatter
+- For external images, add domain to `next.config.js`
+
+## Support
+
+For issues or questions:
+- Open an issue on GitHub
+- Check [Next.js docs](https://nextjs.org/docs)
+- Check [Vercel docs](https://vercel.com/docs)
 
 ---
 
-## 🎨 可选: 自定义域名
-
-如果你想使用自己的域名(如 `guides.yourdomain.com`):
-
-### 1. 添加 CNAME 文件
-
-```bash
-echo "guides.yourdomain.com" > public/CNAME
-```
-
-### 2. 配置 DNS
-
-在你的域名提供商处添加:
-- **类型**: CNAME
-- **名称**: guides (或你的子域名)
-- **值**: `你的用户名.github.io`
-
-### 3. 在 GitHub 配置自定义域名
-
-1. Settings → Pages
-2. Custom domain: 填入 `guides.yourdomain.com`
-3. 勾选 **Enforce HTTPS**
-
----
-
-## 🐛 常见问题
-
-### 问题 1: 部署后页面 404
-
-**解决**: 检查 `astro.config.mjs` 中的 `base` 是否与仓库名一致
-
-### 问题 2: CSS/图片加载失败
-
-**解决**: 确保所有资源路径使用相对路径或包含 base 路径
-
-### 问题 3: GitHub Actions 构建失败
-
-**解决**: 
-- 检查 Node.js 版本是否兼容
-- 在本地先运行 `npm run build` 确保能成功构建
-- 查看 Actions 日志获取详细错误信息
-
-### 问题 4: 页面样式丢失
-
-**解决**: 重新构建项目
-```bash
-npm run build
-git add .
-git commit -m "Rebuild"
-git push
-```
-
----
-
-## 📝 快速命令汇总
-
-```bash
-# 首次部署
-cd game-guides-hub
-git init
-git add .
-git commit -m "Initial commit"
-git remote add origin https://github.com/你的用户名/game-guides-hub.git
-git branch -M main
-git push -u origin main
-
-# 然后去 GitHub 创建仓库并配置 Actions
-
-# 后续更新
-git add .
-git commit -m "Update description"
-git push
-```
-
----
-
-## ✅ 验证清单
-
-部署完成后,检查:
-
-- [ ] 网站可以正常访问
-- [ ] 首页重定向到 `/en/` 正常
-- [ ] 中文页面 `/zh/` 正常
-- [ ] 语言切换按钮工作正常
-- [ ] 所有攻略链接可以正常打开
-- [ ] 移动端显示正常
-- [ ] 页面加载速度快
-
----
-
-## 🎉 完成!
-
-恭喜你!你的游戏攻略网站现在已经部署到 GitHub Pages 了!
-
-**分享你的网站:**
-```
-https://你的用户名.github.io/game-guides-hub/
-```
-
-如果需要帮助,随时问我!
+Good luck with your PalworldGuides launch! 🚀

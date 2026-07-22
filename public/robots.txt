@@ -1,0 +1,17 @@
+# PalworldGuides — robots.txt
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://palworldguides.com/sitemap.xml
+
+# Google Ads bot
+User-agent: Mediapartners-Google
+Allow: /
+
+# Google Page Speed
+User-agent: Google-Pagespeed
+Allow: /
+
+# Block API routes
+Disallow: /api/

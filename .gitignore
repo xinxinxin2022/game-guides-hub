@@ -1,19 +1,42 @@
-# Source files (not needed for deployment)
-src/
+# Dependencies
 node_modules/
-.github/
-package.json
-package-lock.json
-astro.config.mjs
-tsconfig.json
-AGENTS.md
-CLAUDE.md
-DEPLOYMENT-GUIDE.md
-PROJECT-SUMMARY.md
+.pnp
+.pnp.js
 
-# OS
-.DS_Store
-Thumbs.db
+# Next.js
+.next/
+out/
+build/
+dist/
 
-# Logs
+# Production
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment
+.env
+.env*.local
+.env.production
+
+# Vercel
+.vercel
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Testing
+coverage/
+
+# Misc
+.turbo

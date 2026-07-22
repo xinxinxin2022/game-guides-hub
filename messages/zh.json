@@ -1,0 +1,59 @@
+{
+  "common": {
+    "siteName": "幻兽帕鲁攻略",
+    "siteDescription": "幻兽帕鲁终极攻略 — 配种公式、服务器搭建、BOSS位置等",
+    "nav": {
+      "home": "首页",
+      "guides": "攻略",
+      "allGuides": "全部攻略",
+      "breeding": "配种",
+      "serverSetup": "服务器搭建",
+      "about": "关于"
+    },
+    "cta": {
+      "readGuide": "查看攻略",
+      "viewAll": "查看全部攻略",
+      "searchPlaceholder": "搜索攻略..."
+    },
+    "footer": {
+      "copyright": "© {year} 幻兽帕鲁攻略站 版权所有",
+      "disclaimer": "本站非 Pocketpair, Inc. 官方网站。Palworld 是其各自所有者的注册商标。"
+    },
+    "seo": {
+      "defaultTitle": "幻兽帕鲁攻略 — 配种公式、服务器搭建与高手策略",
+      "defaultDescription": "掌握幻兽帕鲁：最佳配种组合、Docker服务器搭建、BOSS位置、纯水晶刷取、毕业阵容推荐等专家攻略。"
+    }
+  },
+  "home": {
+    "hero": {
+      "title": "精通幻兽帕鲁世界",
+      "subtitle": "配种、战斗、基地建设与服务器管理专家攻略",
+      "cta": "探索攻略"
+    },
+    "featuredTitle": "精选攻略",
+    "featuredDescription": "我们最受欢迎的策略与指南",
+    "browseByCategory": "按分类浏览",
+    "viewAll": "查看全部攻略",
+    "categories": {
+      "beginner": "新手入门",
+      "breeding": "配种系统",
+      "combat": "战斗与BOSS",
+      "server": "服务器搭建",
+      "endgame": "后期毕业",
+      "tips": "技巧与窍门"
+    }
+  },
+  "guides": {
+    "title": "全部攻略",
+    "description": "按主题分类的幻兽帕鲁全面攻略",
+    "readTime": "分钟阅读",
+    "lastUpdated": "最后更新",
+    "tableOfContents": "目录",
+    "faq": "常见问题",
+    "relatedGuides": "相关攻略"
+  },
+  "ads": {
+    "sponsored": "推广内容",
+    "advertisement": "广告"
+  }
+}

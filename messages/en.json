@@ -1,0 +1,59 @@
+{
+  "common": {
+    "siteName": "Palworld Guides",
+    "siteDescription": "The ultimate Palworld strategy guide — breeding combos, server setup, boss locations & more",
+    "nav": {
+      "home": "Home",
+      "guides": "Guides",
+      "allGuides": "All Guides",
+      "breeding": "Breeding",
+      "serverSetup": "Server Setup",
+      "about": "About"
+    },
+    "cta": {
+      "readGuide": "Read Guide",
+      "viewAll": "View All Guides",
+      "searchPlaceholder": "Search guides..."
+    },
+    "footer": {
+      "copyright": "© {year} PalworldGuides. All rights reserved.",
+      "disclaimer": "Not affiliated with Pocketpair, Inc. Palworld is a registered trademark of its respective owner."
+    },
+    "seo": {
+      "defaultTitle": "Palworld Guides — Breeding Combos, Server Setup & Pro Strategies",
+      "defaultDescription": "Master Palworld with expert guides: best breeding combinations, Docker server setup, boss locations, Pure Crystal farming, and endgame builds."
+    }
+  },
+  "home": {
+    "hero": {
+      "title": "Master the World of Palworld",
+      "subtitle": "Expert guides for breeding, combat, base building & server management",
+      "cta": "Explore Guides"
+    },
+    "featuredTitle": "Featured Guides",
+    "featuredDescription": "Our most popular strategies and walkthroughs",
+    "browseByCategory": "Browse by Category",
+    "viewAll": "View All Guides",
+    "categories": {
+      "beginner": "Beginner",
+      "breeding": "Breeding",
+      "combat": "Combat & Bosses",
+      "server": "Server Setup",
+      "endgame": "Endgame",
+      "tips": "Tips & Tricks"
+    }
+  },
+  "guides": {
+    "title": "All Guides",
+    "description": "Comprehensive Palworld strategy guides organized by topic",
+    "readTime": "min read",
+    "lastUpdated": "Last updated",
+    "tableOfContents": "Table of Contents",
+    "faq": "FAQ",
+    "relatedGuides": "Related Guides"
+  },
+  "ads": {
+    "sponsored": "Sponsored",
+    "advertisement": "Advertisement"
+  }
+}

@@ -1,0 +1,288 @@
+---
+title: "Palworld Server Setup Guide: Host Multiplayer in 3 Minutes"
+description: "Step-by-step Palworld server setup guide. Learn how to host a multiplayer server on cloud providers, configure settings, and invite friends."
+category: "server"
+tags: ["server setup", "multiplayer", "cloud server", "palworld server"]
+publishedAt: "2026-07-21"
+updatedAt: "2026-07-21"
+featured: true
+coverImage: "/images/palworld-server-setup-3min-guide-cover.jpg"
+---
+
+# Palworld Server Setup Guide: Host Multiplayer in 3 Minutes
+
+Playing Palworld solo is fun, but hosting your own multiplayer server transforms the experience entirely. Running a dedicated server means your world persists even when you close the game, your friends can join anytime, and you have full control over every game setting — experience rates, death penalties, spawn rates, and more. This Palworld server setup guide walks you through the entire process, from choosing a cloud provider to inviting your first friends, in under three minutes of active configuration time.
+
+Whether you are a complete beginner with zero server experience or a seasoned admin looking for a streamlined workflow, this guide covers everything you need to get a Palworld server running smoothly.
+
+## Why You Need a Dedicated Server
+
+Before jumping into the setup, it is worth understanding why a dedicated server is better than the alternatives:
+
+- **Persistent world** — The game world continues running even when the host player is offline. Your Pals keep working, your base keeps producing, and time keeps passing.
+- **No host dependency** — In listen-server mode (the default when you click "Host"), the server shuts down when the host closes the game. A dedicated server runs independently of any player.
+- **Full configuration control** — Adjust experience multipliers, death penalties, Pal spawn rates, day/night cycle speed, and dozens of other settings through configuration files.
+- **Better performance** — Dedicated cloud servers have more consistent CPU and RAM allocation than running the server on a home PC, especially for groups of 4+ players.
+- **24/7 availability** — Your friends can log in whenever they want, regardless of your schedule. This is essential for players in different time zones.
+
+## Server Requirements
+
+Palworld servers are more resource-intensive than you might expect. Here are the minimum and recommended specifications:
+
+| Resource | Minimum | Recommended |
+|----------|---------|-------------|
+| CPU | 4 vCPU | 4+ vCPU (high single-thread performance) |
+| RAM | 16 GB | 32 GB (for 8+ players with large bases) |
+| Storage | 20 GB SSD | 40+ GB NVMe SSD |
+| Bandwidth | 10 Mbps | 50+ Mbps |
+| OS | Ubuntu 22.04 / Windows Server 2022 | Ubuntu 22.04 LTS |
+
+**Important:** The Palworld server process (PalServer) is a single-threaded application. Clock speed matters more than core count. Look for cloud instances with high base CPU frequency (3.0 GHz+).
+
+> **Pro Tip:** Do not try to run a Palworld server on a 2 vCPU / 4 GB instance. It will crash under load the moment two or more players start building bases near each other. 16 GB RAM is the hard minimum.
+
+## Cloud Provider Options and Pricing
+
+Several cloud providers offer suitable instances for Palworld servers. Here is a comparison of the most popular options:
+
+### Alibaba Cloud (Aliyun)
+
+Alibaba Cloud offers excellent value for Palworld servers, particularly for players in the Asia-Pacific region. Their ECS (Elastic Compute Service) instances with 4 vCPU and 16 GB RAM typically cost around $30-50 per month, depending on the region and commitment length. Key advantages include low latency for Asian players, flexible billing (pay-as-you-go or subscription), and easy-to-use console with one-click server templates.
+
+### AWS (Amazon Web Services)
+
+AWS provides reliable infrastructure worldwide. A suitable EC2 instance (t3.xlarge or m5.xlarge) costs approximately $50-80 per month on-demand, less with reserved instances. AWS excels in network reliability and global region coverage, making it ideal for internationally distributed friend groups.
+
+### Other Options
+
+- **Vultr** — Budget-friendly, starting around $24/month for 16 GB RAM instances. Good for North America and Europe.
+- **DigitalOcean** — Similar pricing to Vultr with a simpler interface. Recommended for beginners.
+- **Hetzner** — European-based provider with outstanding price-to-performance. Best for EU players.
+- **Oracle Cloud** — Offers a generous free tier, but performance can be inconsistent for game servers.
+
+For most players, Alibaba Cloud or AWS provide the best balance of price, performance, and ease of use for Palworld servers.
+
+## Step-by-Step Server Setup
+
+### Step 1: Create and Connect to Your Cloud Server
+
+Sign up for your chosen cloud provider and create a new instance with the following configuration:
+
+1. Select **Ubuntu 22.04 LTS** as the operating system
+2. Choose an instance type with at least **4 vCPU and 16 GB RAM**
+3. Allocate at least **40 GB of SSD storage**
+4. Configure your firewall/security group to allow inbound traffic on ports **8211 (UDP)** and **27015 (UDP)**
+5. Note your server's public IP address
+
+Connect to your server via SSH:
+
+```bash
+ssh root@your-server-ip
+```
+
+### Step 2: Install Palworld Server Software
+
+Once connected, run the following commands to install SteamCMD and download the Palworld dedicated server:
+
+```bash
+# Update system packages
+sudo apt update && sudo apt upgrade -y
+
+# Install required dependencies
+sudo apt install -y lib32gcc-s1 lib32stdc++6 tmux curl
+
+# Create a dedicated user (do not run as root)
+sudo useradd -m -s /bin/bash palworld
+sudo su - palworld
+
+# Download and install SteamCMD
+mkdir ~/steamcmd && cd ~/steamcmd
+curl -sSqL https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz | tar xzf -
+
+# Install Palworld dedicated server
+./steamcmd +force_install_dir ~/palworld-server +login anonymous +app_update 2394010 validate +quit
+```
+
+This process downloads approximately 5-8 GB of server files. Wait for the installation to complete.
+
+### Step 3: Configure and Launch the Server
+
+Create a startup script to make launching easy:
+
+```bash
+cd ~/palworld-server
+nano start-server.sh
+```
+
+Add the following content:
+
+```bash
+#!/bin/bash
+./PalServer.sh -useperfthreads -NoAsyncLoadingThread -UseMultithreadForDS -port=8211
+```
+
+Make it executable and launch:
+
+```bash
+chmod +x start-server.sh
+./start-server.sh
+```
+
+For persistent operation (survives SSH disconnection), use tmux:
+
+```bash
+tmux new -s palworld
+./start-server.sh
+# Press Ctrl+B then D to detach
+```
+
+Your server is now live on port 8211!
+
+## Game Configuration Options
+
+The server configuration file is located at:
+
+```
+~/palworld-server/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+```
+
+Open it with a text editor and modify the settings between the `OptionSettings` brackets. Here are the most impactful options:
+
+### Experience and Progression
+
+- **ExpRate** — Controls experience gain multiplier. Default is 1.0. Set to 2.0 for double XP or 0.5 for a slower, more grindy experience.
+- **DropItemRate** — Adjusts how many items enemies and resource nodes drop. Higher values mean more loot.
+- **CollectionDropRate** — Controls resource collection amounts from trees, rocks, and ore nodes.
+
+### Death and Punishment
+
+- **DeathPenalty** — Controls what you lose when you die. Options include:
+  - `None` — No penalties at all
+  - `DropItem` — Drop carried items but keep equipment
+  - `DropEquipment` — Drop items AND equipped gear (default)
+  - `DropEverything` — Lose everything including Pal inventory
+- **AutoResetWorrierHpOnDead** — Automatically heal Pals when the player respawns
+
+### World and Gameplay
+
+- **DayTimeSpeedRate** and **NightTimeSpeedRate** — Adjust how fast time passes during day and night. Higher values make days/nights shorter.
+- **PalSpawnNumRate** — Multiplies wild Pal spawn density. Higher values mean more wild Pals in the world.
+- **PalStomachDecreaceRate** — How fast Pals get hungry. Lower values mean less food consumption.
+- **PlayerAutoHPRegeneRate** — Player health regeneration speed.
+
+### Server Identity
+
+- **ServerName** — Your server's public name (appears in server browser)
+- **ServerDescription** — Short description for the server browser
+- **AdminPassword** — Password for admin commands in-game
+- **ServerPassword** — Leave blank for a public server, or set a password for private sessions
+
+## Port Configuration
+
+Palworld requires two UDP ports:
+
+| Port | Protocol | Purpose |
+|------|----------|---------|
+| 8211 | UDP | Main game traffic |
+| 27015 | UDP | Server query and Steam matchmaking |
+
+Make sure your cloud provider's firewall (security group) allows inbound UDP traffic on both ports. On Alibaba Cloud, this is configured in the ECS console under Security Groups. On AWS, configure it in the EC2 Security Group settings.
+
+If players cannot connect, verify your firewall rules first — this is the single most common connection issue.
+
+## Connecting to Your Server
+
+### Method 1: Direct Connect (Most Reliable)
+
+1. Launch Palworld
+2. Click **Join Multiplayer Game**
+3. At the bottom, enter your server's IP and port: `your-server-ip:8211`
+4. Click **Connect**
+
+### Method 2: Server Browser
+
+1. Launch Palworld
+2. Click **Join Multiplayer Game**
+3. Your server should appear in the list if you configured the ServerName
+4. Click **Connect**
+
+> **Note:** Server browser listings may take up to 5 minutes to appear after the server starts. If it does not show up, use Direct Connect instead.
+
+## Server Management Tips
+
+### Restarting the Server
+
+To restart your server cleanly:
+
+```bash
+tmux attach -t palworld
+# Press Ctrl+C to stop the server
+./start-server.sh  # restart it
+```
+
+Regular restarts (once per day) help prevent memory leaks and keep performance stable.
+
+### Backing Up Your World
+
+Your save data is stored at:
+
+```
+~/palworld-server/Pal/Saved/SaveGames/
+```
+
+Back this up regularly. A simple cron job can automate daily backups:
+
+```bash
+# Add to crontab (crontab -e)
+0 3 * * * tar -czf ~/backups/palworld-$(date +\%Y\%m\%d).tar.gz ~/palworld-server/Pal/Saved/SaveGames/
+```
+
+### Updating the Server
+
+When Palworld releases a new version:
+
+```bash
+tmux attach -t palworld
+# Ctrl+C to stop
+cd ~/steamcmd
+./steamcmd +force_install_dir ~/palworld-server +login anonymous +app_update 2394010 validate +quit
+./start-server.sh
+```
+
+### Monitoring Performance
+
+Use `htop` to monitor CPU and RAM usage. If you consistently see RAM above 14 GB on a 16 GB instance, consider upgrading or reducing the base count limit in the config file.
+
+---
+
+## FAQ
+
+### Can I run a Palworld server on my home PC?
+
+Yes, but it is not recommended for long-term play. Home connections often have limited upload bandwidth, dynamic IPs that change, and the server only runs when your PC is on. A cloud server solves all of these issues.
+
+### How much does it cost to run a Palworld server?
+
+Typically $30-50 per month on Alibaba Cloud or equivalent providers. The exact cost depends on the instance size, region, and billing model. Pay-as-you-go is cheapest for testing; monthly subscriptions are cheaper for always-on servers.
+
+### How many players can a server support?
+
+A 4 vCPU / 16 GB server comfortably supports 4-8 players. For 12-16 players, upgrade to 32 GB RAM. Beyond 16 players, you need a dedicated gaming server provider with optimized Palworld hosting.
+
+### Why can my friends not connect to my server?
+
+Check three things in order: (1) Is your firewall/security group allowing inbound UDP on ports 8211 and 27015? (2) Is the server actually running? (3) Are you and your friends on the same game version? Version mismatches are the second most common cause.
+
+### Can I transfer my single-player save to a dedicated server?
+
+Yes. Copy your save files from `%LOCALAPPDATA%\Pal\Saved\SaveGames` (Windows) to the server's `Pal/Saved/SaveGames/` directory. Make sure the player Steam ID folder structure matches.
+
+### What is the best server location?
+
+Choose the region closest to the majority of your player group. Latency matters significantly in Palworld, especially during combat and building. If your group is spread across regions, pick the midpoint.
+
+### How do I become admin on my own server?
+
+Add your Steam ID to the `AdminList.txt` file in the server config directory. You can also set an `AdminPassword` in PalWorldSettings.ini and use it to authenticate in-game with the admin console.
+
+For troubleshooting common server issues, check out our [Palworld Server Troubleshooting Guide](/en/guides/palworld-server-troubleshooting-errors-guide).

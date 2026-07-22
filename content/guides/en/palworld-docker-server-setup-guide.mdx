@@ -1,0 +1,368 @@
+---
+title: "Palworld Server Docker Setup Guide 2025: Complete Installation and Configuration"
+description: "Set up your own Palworld dedicated server using Docker in 2025. Complete guide with docker-compose.yml, port forwarding, RAM allocation, swap setup, automated backups, and ongoing maintenance tips."
+category: "server"
+tags: ["docker", "server setup", "dedicated server", "configuration", "2025"]
+publishedAt: "2025-01-15"
+updatedAt: "2025-06-01"
+featured: true
+coverImage: "/images/palworld-docker-server-setup-guide-cover.jpg"
+---
+
+# Palworld Server Docker Setup Guide 2025
+
+Running a Palworld dedicated server with Docker is the most reliable, portable, and maintainable way to host your own multiplayer world in 2025. Whether you are setting up a server for friends on a home machine or deploying on a cloud VPS, Docker eliminates dependency headaches, simplifies updates, and gives you one-command server management.
+
+This complete guide walks you through every step — from installing Docker to configuring the server, setting up port forwarding, allocating the right amount of RAM, enabling swap, automating backups, and performing routine maintenance. By the end, you will have a production-ready Palworld server running in a container with minimal ongoing effort.
+
+## Why Use Docker for Your Palworld Server?
+
+Before we dive into the technical setup, here is why Docker is the recommended deployment method for a Palworld dedicated server.
+
+| Benefit | Description |
+|---------|-------------|
+| **Isolation** | Server runs in its own container, no conflicts with host system |
+| **Portability** | Move your server between machines by copying config files |
+| **Easy Updates** | Pull a new image instead of manually reinstalling |
+| **Resource Limits** | Cap RAM and CPU usage to protect your host machine |
+| **Quick Recovery** | One command to restart, rebuild, or roll back |
+| **Automated Backups** | Integrate backup scripts with container lifecycle |
+
+> **Pro Tip:** Docker also makes it trivial to run multiple Palworld servers on one machine — just change the port and data volume for each instance.
+
+## Prerequisites
+
+Before you begin, ensure you have the following:
+
+- A machine (physical or VPS) with at least **4 CPU cores** and **16 GB RAM** (8 GB minimum)
+- **Ubuntu 22.04/24.04** or another modern Linux distribution (Windows and macOS also work with Docker Desktop)
+- **Docker Engine 24.0+** and **Docker Compose v2** installed
+- Basic familiarity with the terminal/command line
+- A **Steam account** (not required for the server itself, but needed if you want to join from Steam)
+
+Check your Docker installation:
+
+```bash
+docker --version
+docker compose version
+```
+
+Both commands should return version numbers. If not, install Docker from [docs.docker.com](https://docs.docker.com/engine/install/).
+
+## Step 1: Create the Project Directory
+
+Start by creating a dedicated directory for your Palworld server:
+
+```bash
+mkdir -p ~/palworld-server
+cd ~/palworld-server
+```
+
+This directory will hold your docker-compose configuration and persistent data.
+
+## Step 2: Write the docker-compose.yml File
+
+Create a `docker-compose.yml` file in your project directory. This single file defines your entire server configuration.
+
+```yaml
+version: "3.9"
+
+services:
+  palworld:
+    image: thijsvanloef/palworld-server-docker:latest
+    container_name: palworld-server
+    restart: unless-stopped
+    stop_grace_period: 30s
+    ports:
+      - "8211:8211/udp"
+      - "27015:27015/udp"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - PORT=8211
+      - SERVER_NAME="My Palworld Server"
+      - SERVER_DESCRIPTION="Welcome to my Palworld server!"
+      - ADMIN_PASSWORD="change_me_strong_password"
+      - SERVER_PASSWORD=""
+      - RCON_ENABLED=true
+      - RCON_PORT=25575
+      - PLAYERS=16
+      - MULTITHREADING=true
+      - COMMUNITY=false
+      - UPDATE_ON_BOOT=true
+    volumes:
+      - ./palworld-data:/palworld/pal/saved
+    mem_limit: 12g
+    cpus: 3
+```
+
+### Key Configuration Options Explained
+
+| Variable | Purpose | Recommended Value |
+|----------|---------|-------------------|
+| `PORT` | Game port for player connections | 8211 |
+| `SERVER_NAME` | Display name in server browser | Any name you like |
+| `ADMIN_PASSWORD` | Password for in-game admin commands | Strong unique password |
+| `SERVER_PASSWORD` | Password for players to join | Empty for public, set for private |
+| `RCON_ENABLED` | Enables remote admin console | true |
+| `PLAYERS` | Maximum concurrent players | 8-32 depending on hardware |
+| `MULTITHREADING` | Enables multi-core usage | true |
+| `UPDATE_ON_BOOT` | Auto-updates server on start | true |
+
+> **Pro Tip:** Never leave `ADMIN_PASSWORD` as a default value. Anyone with the admin password can kick players, change the time, and manipulate the world. Use a password manager to generate a strong one.
+
+## Step 3: RAM Allocation
+
+Palworld servers are memory-hungry. Here is how to allocate RAM properly.
+
+### Recommended RAM by Player Count
+
+| Player Count | Minimum RAM | Recommended RAM |
+|--------------|-------------|-----------------|
+| 1-4 players | 8 GB | 10 GB |
+| 5-8 players | 10 GB | 12 GB |
+| 9-16 players | 12 GB | 16 GB |
+| 17-32 players | 16 GB | 24 GB |
+
+In the docker-compose file above, `mem_limit: 12g` sets a 12 GB ceiling. Adjust this based on your expected player count and available system memory.
+
+### Warning About Over-Allocation
+
+Do not allocate all your system RAM to the container. Leave at least 2-4 GB for the host operating system and Docker overhead. A 16 GB machine should cap the Palworld container at 12 GB.
+
+## Step 4: Swap Setup
+
+Even with enough RAM, Palworld servers can experience memory spikes during large battles or base loading. Setting up swap space provides a safety net.
+
+### Create a Swap File (Linux)
+
+```bash
+# Create an 8 GB swap file
+sudo fallocate -l 8G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+
+# Make swap persistent across reboots
+echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+
+# Optimize swap usage for game servers
+sudo sysctl vm.swappiness=10
+```
+
+> **Pro Tip:** Set `vm.swappiness` to 10 for game servers. The default value of 60 causes the kernel to swap too aggressively, which can cause lag spikes during gameplay. A lower value keeps data in RAM whenever possible.
+
+### Verify Swap Is Working
+
+```bash
+free -h
+```
+
+You should see your swap space listed in the output.
+
+## Step 5: Start the Server
+
+With everything configured, start your Palworld server:
+
+```bash
+cd ~/palworld-server
+docker compose up -d
+```
+
+The `-d` flag runs the container in the background. Check the logs to confirm everything started correctly:
+
+```bash
+docker compose logs -f palworld
+```
+
+You should see the server initialization messages. Once you see "Server started successfully," your Palworld server is online.
+
+## Step 6: Port Forwarding
+
+To let players from outside your network join, you need to forward ports on your router.
+
+### Required Ports
+
+| Port | Protocol | Purpose |
+|------|----------|---------|
+| 8211 | UDP | Game traffic |
+| 27015 | UDP | Server query/heartbeat |
+| 25575 | TCP | RCON (admin remote console, optional) |
+
+### Port Forwarding Steps
+
+1. Log in to your router admin panel (typically `192.168.1.1`)
+2. Navigate to Port Forwarding or NAT settings
+3. Create a new rule for port **8211 UDP** pointing to your server's local IP
+4. Create a rule for port **27015 UDP** pointing to the same IP
+5. Save and apply the changes
+
+### Find Your Public IP
+
+```bash
+curl ifconfig.me
+```
+
+Share this IP along with port 8211 with your players: `your-public-ip:8211`
+
+> **Pro Tip:** Set a static local IP for your server machine via DHCP reservation in your router settings. This ensures port forwarding rules do not break when the server's IP changes.
+
+## Step 7: Connect to Your Server
+
+To connect to your own server for the first time:
+
+1. Launch Palworld through Steam
+2. Click **Join Multiplayer**
+3. Scroll to **Connect to Server** at the bottom
+4. Enter `your-server-ip:8211`
+5. Press Connect
+
+Once connected, open the chat and type:
+
+```
+/AdminPassword your_admin_password
+```
+
+This grants you admin privileges. You can now use commands like `/Shutdown 60` to save and stop the server gracefully.
+
+## Step 8: Automated Backups
+
+Data loss is catastrophic for a Palworld server. Automate backups using a simple cron job.
+
+### Create a Backup Script
+
+Save this as `~/palworld-server/backup.sh`:
+
+```bash
+#!/bin/bash
+BACKUP_DIR="$HOME/palworld-server/backups"
+DATA_DIR="$HOME/palworld-server/palworld-data"
+TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
+
+mkdir -p "$BACKUP_DIR"
+
+# Copy save data
+tar -czf "$BACKUP_DIR/palworld_backup_$TIMESTAMP.tar.gz" -C "$DATA_DIR" .
+
+# Keep only last 7 backups
+cd "$BACKUP_DIR" && ls -t palworld_backup_*.tar.gz | tail -n +8 | xargs -r rm --
+
+echo "Backup completed: palworld_backup_$TIMESTAMP.tar.gz"
+```
+
+Make it executable:
+
+```bash
+chmod +x ~/palworld-server/backup.sh
+```
+
+### Schedule with Cron
+
+Run a backup every day at 4 AM:
+
+```bash
+crontab -e
+```
+
+Add this line:
+
+```
+0 4 * * * /home/youruser/palworld-server/backup.sh >> /home/youruser/palworld-server/backup.log 2>&1
+```
+
+> **Pro Tip:** For serious servers, push backups to an offsite location like an S3 bucket or a secondary server using `rsync` or `rclone` after the local backup completes.
+
+## Step 9: Ongoing Maintenance
+
+A Palworld server is not set-and-forget. Perform these maintenance tasks regularly.
+
+### Weekly Tasks
+
+- **Check disk usage** — Save files grow over time
+- **Review logs** — Look for errors or crashes
+- **Update the container** — Pull the latest image for patches
+
+```bash
+docker compose pull
+docker compose up -d
+```
+
+### Monthly Tasks
+
+- **Validate save data integrity** — Check for corrupted world saves
+- **Rotate backups** — Archive old backups to cold storage
+- **Review admin logs** — Check for abuse or unauthorized admin access
+- **Update admin passwords** — Rotate credentials periodically
+
+### Monitoring Server Health
+
+Use this command to check real-time resource usage:
+
+```bash
+docker stats palworld-server
+```
+
+Watch for CPU consistently above 80% or memory hitting your limit — these are signs you need to upgrade your server hardware or reduce player count.
+
+## Troubleshooting Common Issues
+
+### Server Won't Start
+
+Check the logs for specific errors:
+
+```bash
+docker compose logs palworld
+```
+
+Common causes: port 8211 already in use, insufficient RAM, corrupted save files.
+
+### Players Cannot Connect
+
+1. Verify port forwarding is set up correctly
+2. Check firewall rules (`sudo ufw status` on Ubuntu)
+3. Ensure the server password is empty or shared with players
+4. Confirm the server is actually running with `docker ps`
+
+### Server Lag and Performance Issues
+
+- Reduce `PLAYERS` limit
+- Increase allocated RAM
+- Check `vm.swappiness` setting
+- Consider upgrading CPU cores
+- Disable overly complex base automation
+
+### Save Data Corruption
+
+If your world save becomes corrupted:
+
+1. Stop the server: `docker compose down`
+2. Restore the most recent backup
+3. Restart the server: `docker compose up -d`
+
+Always maintain regular backups to minimize data loss.
+
+## Frequently Asked Questions
+
+### What are the minimum hardware requirements for a Palworld Docker server?
+
+The minimum viable setup is a 2-core CPU, 8 GB RAM, and 20 GB storage. However, for a smooth experience with 4-8 players, we recommend 4 CPU cores, 12-16 GB RAM, and an SSD with at least 50 GB free space. The server's memory usage scales with player count and base complexity.
+
+### Can I run a Palworld server on a VPS?
+
+Yes, many VPS providers support Palworld servers. Look for providers offering at least 4 vCPUs and 16 GB RAM. Popular choices include Hetzner, OVH, and DigitalOcean. Ensure the VPS supports UDP traffic on port 8211. Expect to pay around $20-50 per month for a suitable VPS.
+
+### How do I update my Palworld Docker server?
+
+Updating is simple with Docker. Run `docker compose pull` to download the latest server image, then `docker compose up -d` to recreate the container with the new version. Your save data is stored in a persistent volume and is not affected by updates.
+
+### How do I give myself admin privileges on the server?
+
+Connect to the server, open the in-game console chat, and type `/AdminPassword your_password` using the admin password from your docker-compose.yml file. This grants you access to all admin commands including player management, time control, and server shutdown.
+
+### Can I run multiple Palworld servers on one machine with Docker?
+
+Yes. Create separate directories for each server, each with its own docker-compose.yml file. Change the container name, port mapping (e.g., 8212:8211), and data volume path for each instance. This lets you host different worlds or game modes on a single machine.
+
+### How do I back up my Palworld server save data?
+
+Your save data lives in the `./palworld-data` volume defined in docker-compose.yml. Use the backup script provided in this guide to create compressed archives on a schedule. For disaster recovery, copy backups to an offsite location using rsync, rclone, or a cloud storage service.
