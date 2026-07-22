@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { useLocale, useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from '@/lib/i18n';
 import { formatDate, getReadingTime } from '@/lib/utils';
 import { cn } from '@/lib/utils';
 

@@ -1,8 +1,8 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { useTranslations } from 'next-intl';
-import { useLocale } from 'next-intl';
+import { useTranslations } from '@/lib/i18n';
+import { useLocale } from '@/lib/i18n';
 import Link from 'next/link';
 
 // Dynamic import for 3D scene (client-side only)

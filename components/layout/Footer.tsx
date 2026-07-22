@@ -1,6 +1,6 @@
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/lib/i18n';
 import Link from 'next/link';
-import { useLocale } from 'next-intl';
+import { useLocale } from '@/lib/i18n';
 
 export function Footer() {
   const t = useTranslations('common.footer');

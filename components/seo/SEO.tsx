@@ -1,5 +1,4 @@
 import { Metadata } from 'next';
-import { getTranslations } from 'next-intl/server';
 
 interface SEOProps {
   title: string;
@@ -22,8 +21,6 @@ export async function generateSEO({
   modifiedTime,
   tags = [],
 }: SEOProps): Promise<Metadata> {
-  const t = await getTranslations('common.seo');
-
   const siteName = 'PalworldGuides';
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://palworldguides.com';
   const fullUrl = url ? `${baseUrl}${url}` : baseUrl;
