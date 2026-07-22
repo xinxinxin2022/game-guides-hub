@@ -8,7 +8,7 @@ import { FloatingIsland } from './FloatingIsland';
 
 export function HeroScene() {
   return (
-    <div className="relative h-[600px] w-full">
+    <div className="relative h-[450px] w-full">
       <Canvas
         camera={{ position: [0, 2, 8], fov: 50 }}
         dpr={[1, 2]}

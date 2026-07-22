@@ -14,7 +14,7 @@ export function FeaturedGuides({ locale }: FeaturedGuidesProps) {
   const latestGuides = featuredGuides.length > 0 ? featuredGuides : allGuides.slice(0, 6);
 
   return (
-    <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+    <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
       <div className="flex items-center justify-between mb-8">
         <div>
           <h2 className="text-3xl font-bold text-white">{t('featuredTitle')}</h2>

@@ -1,0 +1,368 @@
+---
+title: "幻兽帕鲁Docker服务器搭建攻略2025：完整安装与配置指南"
+description: "2025年使用Docker搭建你自己的幻兽帕鲁专用服务器。完整攻略包含docker-compose.yml、端口转发、内存分配、Swap设置、自动备份和日常维护建议。"
+category: "server"
+tags: ["docker", "服务器搭建", "专用服务器", "配置", "2025"]
+publishedAt: "2025-01-15"
+updatedAt: "2025-06-01"
+featured: true
+coverImage: "/images/palworld-docker-server-setup-guide-cover.jpg"
+---
+
+# 幻兽帕鲁Docker服务器搭建攻略2025
+
+2025年，使用Docker运行幻兽帕鲁专用服务器是最可靠、最便携、最易维护的自建多人世界方案。无论你是在家用机器上为朋友们搭服务器，还是在云VPS上部署，Docker都能消除依赖问题、简化更新流程，让你用一条命令管理服务器。
+
+本完整攻略将带你走过每一个步骤——从安装Docker到配置服务器、设置端口转发、分配正确的内存、启用Swap、自动化备份，以及日常维护。读完之后，你将拥有一个运行在容器中、几乎无需额外操心的生产级幻兽帕鲁服务器。
+
+## 为什么用Docker搭建幻兽帕鲁服务器？
+
+在进入技术细节之前，先看看为什么Docker是幻兽帕鲁专用服务器的推荐部署方式。
+
+| 优势 | 描述 |
+|------|------|
+| **隔离性** | 服务器运行在独立容器中，不与宿主机冲突 |
+| **可移植性** | 通过复制配置文件即可在机器间迁移服务器 |
+| **更新简便** | 拉取新镜像即可，无需手动重装 |
+| **资源限制** | 可限制内存和CPU使用量，保护宿主机 |
+| **快速恢复** | 一条命令即可重启、重建或回滚 |
+| **自动备份** | 可将备份脚本与容器生命周期集成 |
+
+> **进阶提示：** Docker还能让你轻松在一台机器上运行多个幻兽帕鲁服务器——只需为每个实例更改端口和数据卷。
+
+## 前置条件
+
+开始之前，请确保你有以下准备：
+
+- 一台机器（物理机或VPS），至少 **4核CPU** 和 **16 GB内存**（最低8 GB）
+- **Ubuntu 22.04/24.04** 或其他现代Linux发行版（Windows和macOS也可通过Docker Desktop使用）
+- 已安装 **Docker Engine 24.0+** 和 **Docker Compose v2**
+- 基本的终端/命令行操作经验
+- 一个 **Steam账号**（服务器本身不需要，但如果你想通过Steam加入则需要）
+
+检查Docker安装：
+
+```bash
+docker --version
+docker compose version
+```
+
+两个命令都应返回版本号。如果没有，请从 [docs.docker.com](https://docs.docker.com/engine/install/) 安装Docker。
+
+## 第一步：创建项目目录
+
+首先为你的幻兽帕鲁服务器创建一个专用目录：
+
+```bash
+mkdir -p ~/palworld-server
+cd ~/palworld-server
+```
+
+这个目录将存放你的docker-compose配置和持久化数据。
+
+## 第二步：编写docker-compose.yml文件
+
+在项目目录中创建 `docker-compose.yml` 文件。这一个文件就定义了你的整个服务器配置。
+
+```yaml
+version: "3.9"
+
+services:
+  palworld:
+    image: thijsvanloef/palworld-server-docker:latest
+    container_name: palworld-server
+    restart: unless-stopped
+    stop_grace_period: 30s
+    ports:
+      - "8211:8211/udp"
+      - "27015:27015/udp"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - PORT=8211
+      - SERVER_NAME="My Palworld Server"
+      - SERVER_DESCRIPTION="Welcome to my Palworld server!"
+      - ADMIN_PASSWORD="change_me_strong_password"
+      - SERVER_PASSWORD=""
+      - RCON_ENABLED=true
+      - RCON_PORT=25575
+      - PLAYERS=16
+      - MULTITHREADING=true
+      - COMMUNITY=false
+      - UPDATE_ON_BOOT=true
+    volumes:
+      - ./palworld-data:/palworld/pal/saved
+    mem_limit: 12g
+    cpus: 3
+```
+
+### 关键配置选项说明
+
+| 变量 | 用途 | 推荐值 |
+|------|------|--------|
+| `PORT` | 玩家连接的游戏端口 | 8211 |
+| `SERVER_NAME` | 服务器浏览器中的显示名称 | 你喜欢的任何名称 |
+| `ADMIN_PASSWORD` | 游戏内管理员命令的密码 | 强且唯一的密码 |
+| `SERVER_PASSWORD` | 玩家加入的密码 | 公开服务器留空，私人服务器设置 |
+| `RCON_ENABLED` | 启用远程管理控制台 | true |
+| `PLAYERS` | 最大同时在线玩家数 | 根据硬件8-32人 |
+| `MULTITHREADING` | 启用多核使用 | true |
+| `UPDATE_ON_BOOT` | 启动时自动更新服务器 | true |
+
+> **进阶提示：** 绝对不要把 `ADMIN_PASSWORD` 保留为默认值。任何拥有管理员密码的人都可以踢人、改变时间、操控世界。使用密码管理器生成一个强密码。
+
+## 第三步：内存分配
+
+幻兽帕鲁服务器是内存大户。以下是正确分配内存的方法。
+
+### 按玩家人数推荐内存
+
+| 玩家人数 | 最低内存 | 推荐内存 |
+|----------|----------|----------|
+| 1-4人 | 8 GB | 10 GB |
+| 5-8人 | 10 GB | 12 GB |
+| 9-16人 | 12 GB | 16 GB |
+| 17-32人 | 16 GB | 24 GB |
+
+在上面的docker-compose文件中，`mem_limit: 12g` 设置了12 GB的上限。根据你预期的玩家人数和可用系统内存来调整。
+
+### 过度分配的警告
+
+不要把所有系统内存都分配给容器。至少为宿主操作系统和Docker开销预留2-4 GB。16 GB的机器应该把幻兽帕鲁容器限制在12 GB。
+
+## 第四步：Swap设置
+
+即使内存充足，幻兽帕鲁服务器在大型战斗或基地加载时也可能出现内存峰值。设置Swap空间可以提供安全保障。
+
+### 创建Swap文件（Linux）
+
+```bash
+# 创建8GB swap文件
+sudo fallocate -l 8G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+
+# 使swap在重启后持久化
+echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+
+# 为游戏服务器优化swap使用
+sudo sysctl vm.swappiness=10
+```
+
+> **进阶提示：** 游戏服务器将 `vm.swappiness` 设为10。默认的60会导致内核过于积极地使用swap，可能在游戏过程中造成延迟峰值。较低的值让数据尽可能留在内存中。
+
+### 验证Swap是否生效
+
+```bash
+free -h
+```
+
+你应该能在输出中看到swap空间。
+
+## 第五步：启动服务器
+
+一切配置就绪后，启动你的幻兽帕鲁服务器：
+
+```bash
+cd ~/palworld-server
+docker compose up -d
+```
+
+`-d` 标志让容器在后台运行。查看日志确认一切正常启动：
+
+```bash
+docker compose logs -f palworld
+```
+
+你应该能看到服务器初始化信息。看到"Server started successfully"后，你的幻兽帕鲁服务器就上线了。
+
+## 第六步：端口转发
+
+要让外部网络的玩家加入，你需要在路由器上转发端口。
+
+### 需要的端口
+
+| 端口 | 协议 | 用途 |
+|------|------|------|
+| 8211 | UDP | 游戏流量 |
+| 27015 | UDP | 服务器查询/心跳 |
+| 25575 | TCP | RCON（管理员远程控制台，可选） |
+
+### 端口转发步骤
+
+1. 登录路由器管理面板（通常是 `192.168.1.1`）
+2. 导航到端口转发或NAT设置
+3. 为端口 **8211 UDP** 创建新规则，指向你服务器的本地IP
+4. 为端口 **27015 UDP** 创建规则，指向同一IP
+5. 保存并应用更改
+
+### 查找你的公网IP
+
+```bash
+curl ifconfig.me
+```
+
+将这个IP和端口8211一起分享给你的玩家：`你的公网IP:8211`
+
+> **进阶提示：** 通过路由器的DHCP保留功能为服务器机器设置静态本地IP。这样可以确保端口转发规则不会因服务器IP变化而失效。
+
+## 第七步：连接到你的服务器
+
+首次连接自己的服务器：
+
+1. 通过Steam启动幻兽帕鲁
+2. 点击 **加入多人游戏**
+3. 滚动到底部的 **连接到服务器**
+4. 输入 `你的服务器IP:8211`
+5. 按连接
+
+连接成功后，打开聊天窗口输入：
+
+```
+/AdminPassword 你的管理员密码
+```
+
+这将授予你管理员权限。你现在可以使用 `/Shutdown 60` 等命令来安全保存并停止服务器。
+
+## 第八步：自动备份
+
+数据丢失对幻兽帕鲁服务器来说是灾难性的。使用简单的cron任务自动化备份。
+
+### 创建备份脚本
+
+保存为 `~/palworld-server/backup.sh`：
+
+```bash
+#!/bin/bash
+BACKUP_DIR="$HOME/palworld-server/backups"
+DATA_DIR="$HOME/palworld-server/palworld-data"
+TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
+
+mkdir -p "$BACKUP_DIR"
+
+# 复制存档数据
+tar -czf "$BACKUP_DIR/palworld_backup_$TIMESTAMP.tar.gz" -C "$DATA_DIR" .
+
+# 只保留最近7个备份
+cd "$BACKUP_DIR" && ls -t palworld_backup_*.tar.gz | tail -n +8 | xargs -r rm --
+
+echo "Backup completed: palworld_backup_$TIMESTAMP.tar.gz"
+```
+
+赋予执行权限：
+
+```bash
+chmod +x ~/palworld-server/backup.sh
+```
+
+### 使用Cron定时执行
+
+每天凌晨4点运行备份：
+
+```bash
+crontab -e
+```
+
+添加这行：
+
+```
+0 4 * * * /home/youruser/palworld-server/backup.sh >> /home/youruser/palworld-server/backup.log 2>&1
+```
+
+> **进阶提示：** 对于重要服务器，在本地备份完成后使用 `rsync` 或 `rclone` 将备份推送到异地位置，如S3存储桶或备用服务器。
+
+## 第九步：日常维护
+
+幻兽帕鲁服务器不是搭完就不用管的。定期执行以下维护任务。
+
+### 每周任务
+
+- **检查磁盘使用** — 存档文件会随时间增长
+- **查看日志** — 寻找错误或崩溃记录
+- **更新容器** — 拉取最新镜像以获取补丁
+
+```bash
+docker compose pull
+docker compose up -d
+```
+
+### 每月任务
+
+- **验证存档数据完整性** — 检查是否有损坏的世界存档
+- **轮换备份** — 将旧备份归档到冷存储
+- **审查管理员日志** — 检查是否有滥用或未授权的管理员访问
+- **更新管理员密码** — 定期轮换凭据
+
+### 监控服务器健康
+
+使用以下命令查看实时资源使用：
+
+```bash
+docker stats palworld-server
+```
+
+关注CPU持续超过80%或内存触及上限的情况——这些是需要升级服务器硬件或减少玩家数量的信号。
+
+## 常见问题排查
+
+### 服务器无法启动
+
+查看日志中的具体错误：
+
+```bash
+docker compose logs palworld
+```
+
+常见原因：端口8211已被占用、内存不足、存档文件损坏。
+
+### 玩家无法连接
+
+1. 确认端口转发设置正确
+2. 检查防火墙规则（Ubuntu上使用 `sudo ufw status`）
+3. 确保服务器密码为空或已告知玩家
+4. 用 `docker ps` 确认服务器确实在运行
+
+### 服务器延迟和性能问题
+
+- 降低 `PLAYERS` 上限
+- 增加分配的内存
+- 检查 `vm.swappiness` 设置
+- 考虑升级CPU核心数
+- 禁用过于复杂的基地自动化
+
+### 存档数据损坏
+
+如果你的世界存档损坏了：
+
+1. 停止服务器：`docker compose down`
+2. 恢复最近的备份
+3. 重启服务器：`docker compose up -d`
+
+始终保持定期备份以最小化数据丢失。
+
+## 常见问题
+
+### 幻兽帕鲁Docker服务器的最低硬件需求是什么？
+
+最低可用配置是2核CPU、8 GB内存和20 GB存储。但是，对于4-8人的流畅体验，我们推荐4核CPU、12-16 GB内存，以及至少50 GB可用空间的SSD。服务器的内存使用随玩家数量和基地复杂度而增长。
+
+### 能在VPS上运行幻兽帕鲁服务器吗？
+
+可以，很多VPS提供商支持幻兽帕鲁服务器。选择至少提供4核vCPU和16 GB内存的供应商。热门选择包括Hetzner、OVH和DigitalOcean。确保VPS支持UDP端口8211的流量。合适的VPS预计每月花费约20-50美元。
+
+### 如何更新我的幻兽帕鲁Docker服务器？
+
+Docker让更新变得很简单。运行 `docker compose pull` 下载最新服务器镜像，然后 `docker compose up -d` 用新版本重建容器。你的存档数据存储在持久化卷中，不受更新影响。
+
+### 如何在服务器上给自己管理员权限？
+
+连接到服务器，打开游戏内控制台聊天，输入 `/AdminPassword 你的密码`，使用你docker-compose.yml文件中的管理员密码。这将授予你所有管理员命令的访问权限，包括玩家管理、时间控制和服务器关闭。
+
+### 能用Docker在一台机器上运行多个幻兽帕鲁服务器吗？
+
+可以。为每个服务器创建独立目录，各自拥有自己的docker-compose.yml文件。为每个实例更改容器名称、端口映射（如8212:8211）和数据卷路径。这样你就能在一台机器上托管不同的世界或游戏模式。
+
+### 如何备份幻兽帕鲁服务器的存档数据？
+
+你的存档数据存放在docker-compose.yml中定义的 `./palworld-data` 卷中。使用本攻略提供的备份脚本按计划创建压缩归档。为了灾难恢复，使用rsync、rclone或云存储服务将备份复制到异地。

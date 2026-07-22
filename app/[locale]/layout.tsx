@@ -3,6 +3,7 @@ import { routing } from '@/i18n/routing';
 import type { Locale } from '@/i18n/config';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
+import { I18nClientProvider } from './I18nClientProvider';
 import '@/styles/globals.css';
 
 export function generateStaticParams() {
@@ -48,7 +49,9 @@ async function LayoutContent({
         <div className="flex min-h-screen flex-col">
           <Header locale={locale} />
           <main className="flex-1">
-            {children}
+            <I18nClientProvider locale={locale}>
+              {children}
+            </I18nClientProvider>
           </main>
           <Footer locale={locale} />
         </div>

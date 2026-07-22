@@ -11,7 +11,7 @@ const HeroScene = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="h-[600px] w-full bg-gradient-to-b from-dark-50 to-dark-100 flex items-center justify-center">
+      <div className="h-[450px] w-full bg-gradient-to-b from-dark-50 to-dark-100 flex items-center justify-center">
         <div className="skeleton h-32 w-32 rounded-full" />
       </div>
     ),
@@ -24,7 +24,6 @@ export function HeroSection() {
 
   return (
     <section className="relative overflow-hidden">
-      {/* 3D Background */}
       <div className="absolute inset-0">
         <HeroScene />
       </div>
@@ -34,7 +33,7 @@ export function HeroSection() {
       <div className="absolute inset-0 bg-gradient-to-r from-dark-50/80 via-transparent to-dark-50/80" />
 
       {/* Content */}
-      <div className="relative z-10 flex min-h-[600px] items-center justify-center px-4">
+      <div className="relative z-10 flex min-h-[450px] items-center justify-center px-4">
         <div className="max-w-3xl text-center">
           <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-6xl lg:text-7xl animate-fade-in">
             <span className="text-gradient">{t('title')}</span>
@@ -57,7 +56,7 @@ export function HeroSection() {
       </div>
 
       {/* Bottom fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-dark-50 to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-dark-50 to-transparent" />
     </section>
   );
 }
