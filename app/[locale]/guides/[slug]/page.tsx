@@ -140,7 +140,7 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
               <GuideCard key={related.slug} slug={related.slug} title={related.title}
                 description={related.description} category={related.category}
                 publishedAt={related.publishedAt} readingTime={related.readingTime}
-                coverImage={related.coverImage} />
+                coverImage={related.coverImage} locale={locale} />
             ))}
           </div>
         </section>

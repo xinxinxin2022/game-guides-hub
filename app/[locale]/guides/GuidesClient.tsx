@@ -51,6 +51,7 @@ export function GuidesClient({ locale, initialGuides, categories }: GuidesClient
             publishedAt={guide.publishedAt}
             readingTime={guide.readingTime}
             coverImage={guide.coverImage}
+            locale={locale}
           />
         ))}
       </div>

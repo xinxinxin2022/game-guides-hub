@@ -29,7 +29,7 @@ export default async function BreedingPage({ params }: { params: Promise<{ local
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {guides.map(g => (
           <GuideCard key={g.slug} slug={g.slug} title={g.title} description={g.description}
-            category={g.category} publishedAt={g.publishedAt} readingTime={g.readingTime} coverImage={g.coverImage} />
+            category={g.category} publishedAt={g.publishedAt} readingTime={g.readingTime} coverImage={g.coverImage} locale={locale} />
         ))}
       </div>
       <AdSlot size="rectangle" className="mt-12" />
